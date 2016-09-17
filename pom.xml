@@ -175,6 +175,16 @@
             <version>${spring.framework.version}</version>
             <scope>compile</scope>
         </dependency>
+        
+        <!-- Spring OXM stands for Spring Object XML Mappers 
+             and it is a module available in Spring to ease 
+             the mapping between java objects and XML documents. -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-oxm</artifactId>
+            <version>${spring.framework.version}</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
