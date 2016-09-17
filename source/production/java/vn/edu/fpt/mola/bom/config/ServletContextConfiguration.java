@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
-@EnableWebMvc
+@EnableWebMvc    // facilitate mapping requests to controller methods
 @ComponentScan(
         basePackages = "vn.edu.fpt.mola.bom.site",
         useDefaultFilters = false,
