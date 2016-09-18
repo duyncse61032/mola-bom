@@ -45,7 +45,8 @@ public class RestServletContextConfiguration extends WebMvcConfigurerAdapter
     Marshaller marshaller;
     @Inject
     Unmarshaller unmarshaller;
-    @Inject SpringValidatorAdapter validator;
+    @Inject
+    SpringValidatorAdapter validator;
 
     @Override
     public void configureMessageConverters(

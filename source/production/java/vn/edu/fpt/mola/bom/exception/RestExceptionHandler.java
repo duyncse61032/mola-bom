@@ -15,6 +15,7 @@ import javax.xml.bind.annotation.XmlValue;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @RestEndpointAdvice
 public class RestExceptionHandler
 {
@@ -22,8 +23,7 @@ public class RestExceptionHandler
     public ResponseEntity<ErrorResponse> handle(ConstraintViolationException e)
     {
         ErrorResponse errors = new ErrorResponse();
-        for(ConstraintViolation violation : e.getConstraintViolations())
-        {
+        for (ConstraintViolation violation : e.getConstraintViolations()) {
             ErrorItem error = new ErrorItem();
             error.setCode(violation.getMessageTemplate());
             error.setMessage(violation.getMessage());

@@ -9,25 +9,23 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 
+
 public class Bootstrap implements WebApplicationInitializer
 {
     @Override
     public void onStartup(ServletContext container) throws ServletException
     {
-    	
+
         container.getServletRegistration("default").addMapping("/resource/*");
 
-        AnnotationConfigWebApplicationContext rootContext =
-                new AnnotationConfigWebApplicationContext();
+        AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
         rootContext.register(RootContextConfiguration.class);
         container.addListener(new ContextLoaderListener(rootContext));
 
-        AnnotationConfigWebApplicationContext servletContext =
-                new AnnotationConfigWebApplicationContext();
+        AnnotationConfigWebApplicationContext servletContext = new AnnotationConfigWebApplicationContext();
         servletContext.register(WebServletContextConfiguration.class);
         ServletRegistration.Dynamic dispatcher = container.addServlet(
-                "springDispatcher", new DispatcherServlet(servletContext)
-        );
+                "springDispatcher", new DispatcherServlet(servletContext));
         dispatcher.setLoadOnStartup(1);
         dispatcher.addMapping("/");
     }

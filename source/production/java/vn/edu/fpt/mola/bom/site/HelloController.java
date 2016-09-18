@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.inject.Inject;
 
+
 @Controller
 public class HelloController
 {
@@ -20,7 +21,7 @@ public class HelloController
     }
 
     @ResponseBody
-    @RequestMapping(value = "/", params = {"name"})
+    @RequestMapping(value = "/", params = { "name" })
     public String helloName(@RequestParam("name") String name)
     {
         return this.greetingService.getGreeting(name);
