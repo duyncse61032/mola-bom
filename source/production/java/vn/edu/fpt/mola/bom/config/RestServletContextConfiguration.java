@@ -15,6 +15,8 @@ import org.springframework.http.converter.xml.MarshallingHttpMessageConverter;
 import org.springframework.http.converter.xml.SourceHttpMessageConverter;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
+import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -43,6 +45,7 @@ public class RestServletContextConfiguration extends WebMvcConfigurerAdapter
     Marshaller marshaller;
     @Inject
     Unmarshaller unmarshaller;
+    @Inject SpringValidatorAdapter validator;
 
     @Override
     public void configureMessageConverters(
@@ -73,6 +76,12 @@ public class RestServletContextConfiguration extends WebMvcConfigurerAdapter
         configurer.favorPathExtension(false).favorParameter(false)
                 .ignoreAcceptHeader(false)
                 .defaultContentType(MediaType.APPLICATION_JSON);
+    }
+
+    @Override
+    public Validator getValidator()
+    {
+        return this.validator;
     }
 
     @Bean
