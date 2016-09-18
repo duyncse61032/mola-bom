@@ -35,8 +35,8 @@ import vn.edu.fpt.mola.bom.config.annotation.RestEndpointAdvice;
         basePackages = { "vn.edu.fpt.mola.bom.rest",
                 "vn.edu.fpt.mola.bom.exception" },
         useDefaultFilters = false,
-        includeFilters = @ComponentScan.Filter({
-                RestEndpoint.class, RestEndpointAdvice.class }))
+        includeFilters = @ComponentScan.Filter({ RestEndpoint.class,
+                RestEndpointAdvice.class }))
 public class RestServletContextConfiguration extends WebMvcConfigurerAdapter
 {
     @Inject
@@ -55,9 +55,9 @@ public class RestServletContextConfiguration extends WebMvcConfigurerAdapter
         converters.add(new SourceHttpMessageConverter<>());
 
         MarshallingHttpMessageConverter xmlConverter = new MarshallingHttpMessageConverter();
-        xmlConverter.setSupportedMediaTypes(
-                Arrays.asList(new MediaType("application", "xml"),
-                        new MediaType("text", "xml")));
+        xmlConverter.setSupportedMediaTypes(Arrays.asList(
+                new MediaType("application", "xml"),
+                new MediaType("text", "xml")));
         xmlConverter.setMarshaller(this.marshaller);
         xmlConverter.setUnmarshaller(this.unmarshaller);
         converters.add(xmlConverter);
@@ -74,7 +74,8 @@ public class RestServletContextConfiguration extends WebMvcConfigurerAdapter
     public void configureContentNegotiation(
             ContentNegotiationConfigurer configurer)
     {
-        configurer.favorPathExtension(false).favorParameter(false)
+        configurer.favorPathExtension(false)
+                .favorParameter(false)
                 .ignoreAcceptHeader(false)
                 .defaultContentType(MediaType.APPLICATION_JSON);
     }
