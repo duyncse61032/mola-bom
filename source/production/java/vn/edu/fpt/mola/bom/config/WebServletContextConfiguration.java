@@ -18,7 +18,6 @@ import org.springframework.http.converter.xml.MarshallingHttpMessageConverter;
 import org.springframework.http.converter.xml.SourceHttpMessageConverter;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.RequestToViewNameTranslator;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
@@ -30,14 +29,16 @@ import org.springframework.web.servlet.view.JstlView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import vn.edu.fpt.mola.bom.config.annotation.WebController;
+
 @Configuration
 @EnableWebMvc
 @ComponentScan(
         basePackages = "vn.edu.fpt.mola.bom.site",
         useDefaultFilters = false,
-        includeFilters = @ComponentScan.Filter(Controller.class)
+        includeFilters = @ComponentScan.Filter(WebController.class)
 )
-public class ServletContextConfiguration extends WebMvcConfigurerAdapter
+public class WebServletContextConfiguration extends WebMvcConfigurerAdapter
 {
     @Inject ObjectMapper objectMapper;
     @Inject Marshaller marshaller;

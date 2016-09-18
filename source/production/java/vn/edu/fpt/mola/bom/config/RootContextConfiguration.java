@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 @Configuration
 @EnableAsync(proxyTargetClass = true)
 @EnableScheduling
-@ComponentScan(basePackages = "vn.edu.fpt.mola.bom.site",
+@ComponentScan(basePackages = "vn.edu.fpt.mola.bom",
         excludeFilters = @ComponentScan.Filter(Controller.class))
 public class RootContextConfiguration
         implements AsyncConfigurer, SchedulingConfigurer
