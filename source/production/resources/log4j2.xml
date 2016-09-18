@@ -5,8 +5,8 @@
             <PatternLayout
                     pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
-        <RollingFile name="WroxFileAppender" fileName="../logs/application.log"
-                     filePattern="../logs/application-%d{MM-dd-yyyy}-%i.log">
+        <RollingFile name="MolaBomFileAppender" fileName="../logs/mola-bom.log"
+                     filePattern="../logs/mola-bom-%d{MM-dd-yyyy}-%i.log">
             <PatternLayout>
                 <pattern>%d{HH:mm:ss.SSS} [%t] %X{id} %X{username} %-5level %c{36} %l: %msg%n</pattern>
             </PatternLayout>
@@ -19,9 +19,9 @@
     <loggers>
         <root level="warn">
             <appender-ref ref="Console" />
-            <appender-ref ref="WroxFileAppender" />
+            <appender-ref ref="MolaBomFileAppender" />
         </root>
-        <logger name="com.wrox" level="info" />
+        <logger name="vn.edu.fpt.mola" level="info" />
         <logger name="org.apache" level="info" />
         <logger name="org.springframework" level="info" />
     </loggers>
