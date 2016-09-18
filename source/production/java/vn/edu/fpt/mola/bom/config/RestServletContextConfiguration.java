@@ -24,13 +24,17 @@ import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import vn.edu.fpt.mola.bom.config.annotation.RestEndpoint;
+import vn.edu.fpt.mola.bom.config.annotation.RestEndpointAdvice;
 
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = "vn.edu.fpt.mola.bom.rest",
+@ComponentScan(
+        basePackages = { "vn.edu.fpt.mola.bom.rest",
+                "vn.edu.fpt.mola.bom.exception" },
         useDefaultFilters = false,
-        includeFilters = @ComponentScan.Filter(RestEndpoint.class))
+        includeFilters = @ComponentScan.Filter({
+                RestEndpoint.class, RestEndpointAdvice.class }))
 public class RestServletContextConfiguration extends WebMvcConfigurerAdapter
 {
     @Inject

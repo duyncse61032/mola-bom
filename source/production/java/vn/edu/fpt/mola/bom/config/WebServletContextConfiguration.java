@@ -31,47 +31,48 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import vn.edu.fpt.mola.bom.config.annotation.WebController;
 
+
 @Configuration
 @EnableWebMvc
 @ComponentScan(
-        basePackages = "vn.edu.fpt.mola.bom.site",
+        basePackages = { "vn.edu.fpt.mola.bom.site",
+                "vn.edu.fpt.mola.bom.exception" },
         useDefaultFilters = false,
-        includeFilters = @ComponentScan.Filter(WebController.class)
-)
+        includeFilters = @ComponentScan.Filter(WebController.class))
 public class WebServletContextConfiguration extends WebMvcConfigurerAdapter
 {
-    @Inject ObjectMapper objectMapper;
-    @Inject Marshaller marshaller;
-    @Inject Unmarshaller unmarshaller;
+    @Inject
+    ObjectMapper objectMapper;
+    @Inject
+    Marshaller marshaller;
+    @Inject
+    Unmarshaller unmarshaller;
 
     /**
      * Configuring Message Converters
      */
     @Override
     public void configureMessageConverters(
-            List<HttpMessageConverter<?>> converters) {
-    	
+            List<HttpMessageConverter<?>> converters)
+    {
+
         converters.add(new ByteArrayHttpMessageConverter());
         converters.add(new StringHttpMessageConverter());
         converters.add(new FormHttpMessageConverter());
         converters.add(new SourceHttpMessageConverter<>());
 
-        MarshallingHttpMessageConverter xmlConverter =
-                new MarshallingHttpMessageConverter();
+        MarshallingHttpMessageConverter xmlConverter = new MarshallingHttpMessageConverter();
         xmlConverter.setSupportedMediaTypes(Arrays.asList(
                 new MediaType("application", "xml"),
-                new MediaType("text", "xml")
-        ));
+                new MediaType("text", "xml")));
         xmlConverter.setMarshaller(this.marshaller);
         xmlConverter.setUnmarshaller(this.unmarshaller);
         converters.add(xmlConverter);
 
-        MappingJackson2HttpMessageConverter jsonConverter =
-                new MappingJackson2HttpMessageConverter();
+        MappingJackson2HttpMessageConverter jsonConverter = new MappingJackson2HttpMessageConverter();
         jsonConverter.setSupportedMediaTypes(Arrays.asList(
                 new MediaType("application", "json"),
-                new MediaType("text", "json")
-        ));
+                new MediaType("text", "json")));
         jsonConverter.setObjectMapper(this.objectMapper);
         converters.add(jsonConverter);
     }
@@ -91,19 +92,22 @@ public class WebServletContextConfiguration extends WebMvcConfigurerAdapter
                 .mediaType("xml", MediaType.APPLICATION_XML)
                 .mediaType("json", MediaType.APPLICATION_JSON);
     }
-    
+
     /**
      * Configuring View Resolution
+     * 
      * @return
      */
     @Bean
     public ViewResolver viewResolver()
     {
-        /*  The InternalResourceView and JstlView implement traditional JSP and 
-            JSTL-enhanced-JSP views, respectively. They take care of translating model attributes to 
-            request attributes and forwarding the request on to the proper JSP. */
-        InternalResourceViewResolver resolver =
-                new InternalResourceViewResolver();
+        /*
+         * The InternalResourceView and JstlView implement traditional JSP and
+         * JSTL-enhanced-JSP views, respectively. They take care of translating
+         * model attributes to request attributes and forwarding the request on
+         * to the proper JSP.
+         */
+        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
         resolver.setViewClass(JstlView.class);
         resolver.setPrefix("/WEB-INF/jsp/view/");
         resolver.setSuffix(".jsp");
@@ -112,16 +116,19 @@ public class WebServletContextConfiguration extends WebMvcConfigurerAdapter
 
     /**
      * Configuring View Name Translation
+     * 
      * @return
      */
     @Bean
     public RequestToViewNameTranslator viewNameTranslator()
     {
-    	/*  Strips off the web application context URL and any file extension
-    	    at the end of the URL. What remains of the URL becomes the view name.
-    	    For example, the URL http://localhost:8080/mvc/foo turns into the view name foo,
-    	    whereas the URL http://localhost:8080/mvc/foo/bar.html turns into 
-            the view name foo/bar. */
+        /*
+         * Strips off the web application context URL and any file extension at
+         * the end of the URL. What remains of the URL becomes the view name.
+         * For example, the URL http://localhost:8080/mvc/foo turns into the
+         * view name foo, whereas the URL http://localhost:8080/mvc/foo/bar.html
+         * turns into the view name foo/bar.
+         */
         return new DefaultRequestToViewNameTranslator();
     }
 }
