@@ -17,12 +17,12 @@
         </RollingFile>
     </appenders>
     <loggers>
-        <root level="warn">
+        <root level="all">
             <appender-ref ref="Console" />
             <appender-ref ref="MolaBomFileAppender" />
         </root>
-        <logger name="vn.edu.fpt.mola" level="info" />
-        <logger name="org.apache" level="info" />
-        <logger name="org.springframework" level="info" />
+        <logger name="vn.edu.fpt.mola" level="all" />
+        <logger name="org.apache" level="all" />
+        <logger name="org.springframework" level="all" />
     </loggers>
 </configuration>

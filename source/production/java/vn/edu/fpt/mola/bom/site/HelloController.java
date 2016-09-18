@@ -1,14 +1,15 @@
 package vn.edu.fpt.mola.bom.site;
 
-import org.springframework.stereotype.Controller;
+import javax.inject.Inject;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.inject.Inject;
+import vn.edu.fpt.mola.bom.config.annotation.WebController;
 
 
-@Controller
+@WebController
 public class HelloController
 {
     private GreetingService greetingService;
