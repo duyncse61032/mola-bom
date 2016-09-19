@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context antiJARLocking="true" path="">
+	<Resource auth="Container"
+		name="jdbc/mola"
+	    driverClassName="com.mysql.jdbc.Driver"
+		type="javax.sql.DataSource"
+		url="jdbc:mysql://localhost:3306/SpringJpa"
+		defaultTransactionIsolation="READ_COMMITED"
+		username="root"
+		password="123456" />
+</Context>

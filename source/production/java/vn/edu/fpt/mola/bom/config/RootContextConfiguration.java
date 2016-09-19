@@ -1,15 +1,27 @@
 package vn.edu.fpt.mola.bom.config;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Hashtable;
+import java.util.Map;
 import java.util.concurrent.Executor;
+
+import javax.persistence.SharedCacheMode;
+import javax.persistence.ValidationMode;
+import javax.sql.DataSource;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.core.Ordered;
+import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
@@ -19,6 +31,8 @@ import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -29,8 +43,15 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 
 @Configuration
-@EnableAsync(proxyTargetClass = true)
 @EnableScheduling
+@EnableAsync(
+        mode = AdviceMode.PROXY, proxyTargetClass = false,
+        order = Ordered.HIGHEST_PRECEDENCE
+)
+@EnableTransactionManagement(
+        mode = AdviceMode.PROXY, proxyTargetClass = false,
+        order = Ordered.LOWEST_PRECEDENCE
+)
 @ComponentScan(basePackages = "vn.edu.fpt.mola.bom",
         excludeFilters = @ComponentScan.Filter({ Controller.class,
                 ControllerAdvice.class }))
@@ -48,8 +69,10 @@ public class RootContextConfiguration
         messageSource.setCacheSeconds(-1);
         messageSource.setDefaultEncoding(StandardCharsets.UTF_8.name());
         messageSource.setBasenames(
-                "/WEB-INF/i18n/titles", "/WEB-INF/i18n/messages",
-                "/WEB-INF/i18n/errors", "/WEB-INF/i18n/validation");
+                "/WEB-INF/i18n/titles",
+                "/WEB-INF/i18n/messages",
+                "/WEB-INF/i18n/errors",
+                "/WEB-INF/i18n/validation");
         return messageSource;
     }
 
@@ -87,6 +110,42 @@ public class RootContextConfiguration
         Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
         marshaller.setPackagesToScan(new String[] { "vn.edu.fpt.mola.bom" });
         return marshaller;
+    }
+
+    @Bean
+    public DataSource springJpaDataSource()
+    {
+        JndiDataSourceLookup lookup = new JndiDataSourceLookup();
+        return lookup.getDataSource("java:comp/env/jdbc/SpringJpa");
+    }
+
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean()
+    {
+        Map<String, Object> properties = new Hashtable<>();
+        properties.put("javax.persistence.schema-generation.database.action",
+                "none");
+
+        HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
+        adapter.setDatabasePlatform("org.hibernate.dialect.MySQL5InnoDBDialect");
+
+        LocalContainerEntityManagerFactoryBean factory =
+                new LocalContainerEntityManagerFactoryBean();
+        factory.setJpaVendorAdapter(adapter);
+        factory.setDataSource(this.springJpaDataSource());
+        factory.setPackagesToScan("vn.edu.fpt.mola.bom.entity");
+        factory.setSharedCacheMode(SharedCacheMode.ENABLE_SELECTIVE);
+        factory.setValidationMode(ValidationMode.NONE);
+        factory.setJpaPropertyMap(properties);
+        return factory;
+    }
+
+    @Bean
+    public PlatformTransactionManager jpaTransactionManager()
+    {
+        return new JpaTransactionManager(
+                this.entityManagerFactoryBean().getObject()
+        );
     }
 
     @Bean
