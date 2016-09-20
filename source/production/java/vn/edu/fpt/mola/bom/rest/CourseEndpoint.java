@@ -3,7 +3,6 @@ package vn.edu.fpt.mola.bom.rest;
 import javax.inject.Inject;
 import javax.validation.Valid;
 
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import vn.edu.fpt.mola.bom.config.annotation.RestEndpoint;
 import vn.edu.fpt.mola.bom.entity.Course;
-import vn.edu.fpt.mola.bom.entity.view.CourseList;
+import vn.edu.fpt.mola.bom.entity.view.Wrapper;
 import vn.edu.fpt.mola.bom.service.CourseService;
 
 
@@ -26,11 +25,9 @@ public class CourseEndpoint
 
     @RequestMapping(value = "/user/{userId}/course", method = RequestMethod.GET)
     @ResponseBody
-    public CourseList read(@PathVariable("userId") long userId)
+    public Wrapper<Course> read(@PathVariable("userId") long userId)
     {
-        CourseList list = new CourseList();
-        list.setCourses(this.courseService.getCourseByAuthor(userId));
-        return list;
+        return new Wrapper<Course>(this.courseService.getCourseByAuthor(userId));
     }
 
     @RequestMapping(value = "user/{userId}/course/{id}",
