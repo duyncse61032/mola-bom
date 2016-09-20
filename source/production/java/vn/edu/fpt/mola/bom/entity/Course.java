@@ -2,29 +2,40 @@ package vn.edu.fpt.mola.bom.entity;
 
 import java.time.Instant;
 
+import javax.persistence.Basic;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.xml.bind.annotation.XmlTransient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import vn.edu.fpt.mola.bom.entity.converter.InstantConverter;
+import vn.edu.fpt.mola.bom.entity.enumerate.CourseStatus;
+import vn.edu.fpt.mola.bom.entity.enumerate.Degree;
+
+@Entity
 public class Course
 {
-    private MolaUser author;
     private int id;
     private String title;
-    private String subject;
-    private CourseLevel level;
+    private String topic;
+    private Degree degree;
     private String description;
     private Instant createDate;
     private Instant publishDate;
-    private CourseStatus status;
+    private CourseStatus state;
+    private UserPrincipal author;
 
-    public MolaUser getAuthor()
-    {
-        return author;
-    }
-
-    public void setAuthor(MolaUser author)
-    {
-        this.author = author;
-    }
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getId()
     {
         return id;
@@ -35,6 +46,7 @@ public class Course
         this.id = id;
     }
 
+    @Basic
     public String getTitle()
     {
         return title;
@@ -45,26 +57,29 @@ public class Course
         this.title = title;
     }
 
-    public String getSubject()
+    @Basic
+    public String getTopic()
     {
-        return subject;
+        return topic;
     }
 
-    public void setSubject(String subject)
+    public void setTopic(String topic)
     {
-        this.subject = subject;
+        this.topic = topic;
     }
 
-    public CourseLevel getLevel()
+    @Enumerated(EnumType.STRING)
+    public Degree getDegree()
     {
-        return level;
+        return degree;
     }
 
-    public void setLevel(CourseLevel level)
+    public void setDegree(Degree degree)
     {
-        this.level = level;
+        this.degree = degree;
     }
 
+    @Basic
     public String getDescription()
     {
         return description;
@@ -75,6 +90,7 @@ public class Course
         this.description = description;
     }
 
+    @Convert(converter = InstantConverter.class)
     public Instant getCreateDate()
     {
         return createDate;
@@ -85,6 +101,7 @@ public class Course
         this.createDate = createDate;
     }
 
+    @Convert(converter = InstantConverter.class)
     public Instant getPublishDate()
     {
         return publishDate;
@@ -95,14 +112,29 @@ public class Course
         this.publishDate = publishDate;
     }
 
-    public CourseStatus getStatus()
+    @Enumerated(EnumType.STRING)
+    public CourseStatus getState()
     {
-        return status;
+        return state;
     }
 
-    public void setStatus(CourseStatus status)
+    public void setState(CourseStatus state)
     {
-        this.status = status;
+        this.state = state;
+    }
+
+    @XmlTransient
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "AuthorId")
+    public UserPrincipal getAuthor()
+    {
+        return author;
+    }
+
+    public void setAuthor(UserPrincipal author)
+    {
+        this.author = author;
     }
 
 }

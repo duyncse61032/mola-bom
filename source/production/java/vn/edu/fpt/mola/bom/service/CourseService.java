@@ -7,7 +7,7 @@ import vn.edu.fpt.mola.bom.entity.Course;
 
 public interface CourseService
 {
-    List<Course> getCourseByAuthor(int id);
-
-    void saveCourse(int authorId, Course course);
+    Course get(long id);
+    List<Course> getCourseByAuthor(long id);
+    void saveCourse(long authorId, Course course);
 }

@@ -4,7 +4,7 @@
 		name="jdbc/mola"
 	    driverClassName="com.mysql.jdbc.Driver"
 		type="javax.sql.DataSource"
-		url="jdbc:mysql://localhost:3306/SpringJpa"
+		url="jdbc:mysql://localhost:3306/mola"
 		defaultTransactionIsolation="READ_COMMITED"
 		username="root"
 		password="123456" />

@@ -5,23 +5,23 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import vn.edu.fpt.mola.bom.entity.MolaUser;
+import vn.edu.fpt.mola.bom.entity.UserPrincipal;
 
 
 @XmlRootElement(name = "users")
-public class MolaUserList
+public class UserList
 {
-    private List<MolaUser> list;
+    private List<UserPrincipal> users;
 
     @XmlElement(name = "user")
-    public List<MolaUser> getList()
+    public List<UserPrincipal> getList()
     {
-        return list;
+        return users;
     }
 
-    public void setList(List<MolaUser> list)
+    public void setList(List<UserPrincipal> list)
     {
-        this.list = list;
+        this.users = list;
     }
 
 }

@@ -18,6 +18,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.Ordered;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -51,6 +52,11 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 @EnableTransactionManagement(
         mode = AdviceMode.PROXY, proxyTargetClass = false,
         order = Ordered.LOWEST_PRECEDENCE
+)
+@EnableJpaRepositories(
+        basePackages = "vn.edu.fpt.mola.bom.repository",
+        entityManagerFactoryRef = "entityManagerFactoryBean",
+        transactionManagerRef = "jpaTransactionManager"
 )
 @ComponentScan(basePackages = "vn.edu.fpt.mola.bom",
         excludeFilters = @ComponentScan.Filter({ Controller.class,
@@ -116,7 +122,7 @@ public class RootContextConfiguration
     public DataSource springJpaDataSource()
     {
         JndiDataSourceLookup lookup = new JndiDataSourceLookup();
-        return lookup.getDataSource("java:comp/env/jdbc/SpringJpa");
+        return lookup.getDataSource("java:comp/env/jdbc/mola");
     }
 
     @Bean

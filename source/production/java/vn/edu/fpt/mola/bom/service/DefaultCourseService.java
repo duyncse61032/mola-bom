@@ -1,6 +1,9 @@
 package vn.edu.fpt.mola.bom.service;
 
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -9,9 +12,10 @@ import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 
 import vn.edu.fpt.mola.bom.entity.Course;
-import vn.edu.fpt.mola.bom.entity.MolaUser;
+import vn.edu.fpt.mola.bom.entity.UserPrincipal;
+import vn.edu.fpt.mola.bom.exception.ResourceNotFoundException;
 import vn.edu.fpt.mola.bom.repository.CourseRepository;
-import vn.edu.fpt.mola.bom.repository.MolaUserRepository;
+import vn.edu.fpt.mola.bom.repository.UserRepository;
 
 
 @Service
@@ -20,37 +24,47 @@ public class DefaultCourseService implements CourseService
     @Inject
     CourseRepository courseRepository;
     @Inject
-    MolaUserRepository molaUserRepository;
+    UserRepository userRepository;
     @Inject
     NotificationService notificationService;
 
     @Override
-    public List<Course> getCourseByAuthor(int id)
+    public Course get(long id)
     {
-        List<Course> list = this.courseRepository.getByAuthor(id);
+        return this.courseRepository.findOne(id);
+    }
+    @Override
+    public List<Course> getCourseByAuthor(long id)
+    {
+        Iterable<Course> iterable = this.courseRepository.getByAuthor_Id(id);
+        List<Course> list = new ArrayList<Course>();
+        for (Course course : iterable) {
+            list.add(course);
+        }
+        
         list.sort((c1, c2) -> c1.getId() < c2.getId() ? -1 : 1);
         return list;
     }
 
     @Override
-    public void saveCourse(int authorId, Course course)
+    public void saveCourse(long authorId, Course course)
     {
-        MolaUser user = this.molaUserRepository.get(authorId);
+        UserPrincipal user = this.userRepository.findOne(authorId);
         if (course.getId() < 1) {
             user.getCourseList().add(course);
             course.setAuthor(user);
-            this.courseRepository.add(course);
+            course.setCreateDate(Instant.now());
+            this.courseRepository.save(course);
         } else {
-            this.courseRepository.update(course);
+            this.courseRepository.save(course);
         }
         // Send notification
-        Set<String> recipients = new HashSet<>();
-        for (MolaUser u : user.getFollower()) {
-            recipients.add(u.getEmail());
-        }
-        this.notificationService.sendNotification("Course Update",
-                user.getName() + " add/update course " + course.getTitle(),
-                recipients);
+//        Set<String> recipients = new HashSet<>();
+//        for (UserPrincipal u : user.getFollowerList()) {
+//            recipients.add(u.getDisplayName());
+//        }
+//        this.notificationService.sendNotification("Course Update",
+//                user.getName() + " add/update course " + course.getTitle(),
+//                recipients);
     }
-
 }
