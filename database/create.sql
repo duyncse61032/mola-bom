@@ -3,11 +3,20 @@ CREATE DATABASE mola DEFAULT CHARACTER SET 'utf8'
 
 USE mola;
 
-#DROP TABLE UserPrincipal;
+DROP TABLE UserPrincipal;
 CREATE TABLE UserPrincipal (
   Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   Username VARCHAR(30) NOT NULL,
   HashedPassword BINARY(60) NOT NULL,
+  #Profile  
+  Title VARCHAR(35) NULL, 
+  FirstName VARCHAR(35) NOT NULL,
+  LastName VARCHAR(35) NOT NULL,
+  NameSuffix VARCHAR(35) NULL,
+  DisplayName VARCHAR(70) NULL,
+  Gender ENUM('MALE', 'FEMALE', 'UNSPECIFIED') NULL,
+  Birthday DATE NULL,
+  
   UNIQUE KEY UserPrincipal_Username (Username)
 ) ENGINE = InnoDB;
 
@@ -24,20 +33,6 @@ CREATE TABLE Following (
     REFERENCES UserPrincipal (Id)
     ON DELETE CASCADE,
   PRIMARY KEY (FollowerId, FolloweeId)
-) ENGINE = InnoDB;
-
-#DROP TABLE UserProfile;
-CREATE TABLE UserProfile (
-  UserId BIGINT UNSIGNED NOT NULL PRIMARY KEY,
-  Title VARCHAR(35) NULL, 
-  FirstName VARCHAR(35) NOT NULL,
-  LastName VARCHAR(35) NOT NULL,
-  NameSuffix VARCHAR(35) NULL,
-  DisplayName VARCHAR(70) NULL,
-  Gender ENUM('MALE', 'FEMALE', 'UNSPECIFIED') NULL,
-  Birthday DATE NULL,
-  CONSTRAINT UserProfile_fk_UserId FOREIGN KEY (UserId)
-    REFERENCES UserPrincipal (Id) ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
 #DROP TABLE Address;
