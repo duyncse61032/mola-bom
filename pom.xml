@@ -339,6 +339,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>mola-bom</finalName>
 		<sourceDirectory>source/production/java</sourceDirectory>
 		<resources>
 			<resource>
@@ -360,6 +361,7 @@
 				<version>2.3</version>
 				<configuration>
 					<warSourceDirectory>web</warSourceDirectory>
+					<warName>mola-bom.war</warName>
 				</configuration>
 			</plugin>
 			<plugin>
