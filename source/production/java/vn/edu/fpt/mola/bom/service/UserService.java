@@ -5,8 +5,6 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.NotBlank;
-
 import vn.edu.fpt.mola.bom.entity.UserPrincipal;
 
 
