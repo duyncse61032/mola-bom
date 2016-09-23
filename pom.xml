@@ -212,7 +212,7 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
 			<version>${hibernate.validator.version}</version>
-			<scope>runtime</scope>
+			<scope>compile</scope>
 			<exclusions>
 				<exclusion>
 					<groupId>org.jboss.logging</groupId>
