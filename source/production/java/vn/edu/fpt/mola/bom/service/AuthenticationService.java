@@ -3,9 +3,9 @@ package vn.edu.fpt.mola.bom.service;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.NotBlank;
 
 import vn.edu.fpt.mola.bom.entity.UserPrincipal;
+import vn.edu.fpt.mola.bom.validator.NotBlank;
 
 public interface AuthenticationService
 {
