@@ -1,16 +1,9 @@
 package vn.edu.fpt.mola.bom.entity;
 
 import java.io.Serializable;
-import java.security.Principal;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -19,13 +12,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
-import javax.servlet.http.HttpSession;
-import javax.xml.bind.annotation.XmlTransient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -33,33 +25,41 @@ import vn.edu.fpt.mola.bom.entity.converter.InstantConverter;
 import vn.edu.fpt.mola.bom.entity.enumerate.Gender;
 
 
+/**
+ * The persistent class for the userprincipal database table.
+ * 
+ */
 @Entity
-@Table(uniqueConstraints = {
-        @UniqueConstraint(name = "UserPrincipal_Username",
-                columnNames = "Username")
-})
-@Access(AccessType.PROPERTY)
-public class UserPrincipal implements Principal, Cloneable, Serializable
+@NamedQuery(name = "UserPrincipal.findAll",
+        query = "SELECT u FROM UserPrincipal u")
+public class UserPrincipal implements Serializable
 {
     private static final long serialVersionUID = 1L;
-
-    private static final String SESSION_ATTRIBUTE_KEY = "vn.edu.fpt.mola.bom.user.principal";
-
     private long id;
     private String username;
-    private byte[] password;
-
-    private String title;
+    private byte[] hashedPassword;
+    private Instant birthday;
+    private String displayName;
     private String firstName;
     private String lastName;
-    private String nameSuffix;
-    private String displayName;
     private Gender gender;
-    private Instant birthday;
+    private String nameSuffix;
+    private String title;
     private Address address;
-    private List<Course> courseList = new ArrayList<>();
-    // private List<UserPrincipal> followeeList = new ArrayList<>();
-    // private List<UserPrincipal> followerList = new ArrayList<>();
+    private List<Course> courseList;
+    private List<Enroll> enrollList;
+    private List<Meeting> learningMeetingList;
+    private List<Meeting> teachingMeetingList;
+    private List<Rank> rankList;
+    private List<TimeFrame> timeFrameList;
+    private List<Usedlanguage> usedLanguageList;
+    private List<Role> roleList;
+    private List<UserPrincipal> followerList;
+    private List<UserPrincipal> followeeList;
+
+    public UserPrincipal()
+    {
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,14 +73,88 @@ public class UserPrincipal implements Principal, Cloneable, Serializable
         this.id = id;
     }
 
-    @Override
-    @Transient
-    public String getName()
+    @Convert(converter = InstantConverter.class)
+    public Instant getBirthday()
     {
-        return this.username;
+        return this.birthday;
     }
 
-    @Basic
+    public void setBirthday(Instant birthday)
+    {
+        this.birthday = birthday;
+    }
+
+    public String getDisplayName()
+    {
+        return this.displayName;
+    }
+
+    public void setDisplayName(String displayName)
+    {
+        this.displayName = displayName;
+    }
+
+    public String getFirstName()
+    {
+        return this.firstName;
+    }
+
+    public void setFirstName(String firstName)
+    {
+        this.firstName = firstName;
+    }
+
+    @Enumerated(EnumType.STRING)
+    public Gender getGender()
+    {
+        return this.gender;
+    }
+
+    public void setGender(Gender gender)
+    {
+        this.gender = gender;
+    }
+
+    public byte[] getHashedPassword()
+    {
+        return this.hashedPassword;
+    }
+
+    public void setHashedPassword(byte[] hashedPassword)
+    {
+        this.hashedPassword = hashedPassword;
+    }
+
+    public String getLastName()
+    {
+        return this.lastName;
+    }
+
+    public void setLastName(String lastName)
+    {
+        this.lastName = lastName;
+    }
+
+    public String getNameSuffix()
+    {
+        return this.nameSuffix;
+    }
+
+    public void setNameSuffix(String nameSuffix)
+    {
+        this.nameSuffix = nameSuffix;
+    }
+
+    public String getTitle()
+    {
+        return this.title;
+    }
+
+    public void setTitle(String title)
+    {
+        this.title = title;
+    }
+
     public String getUsername()
     {
         return this.username;
@@ -91,141 +165,11 @@ public class UserPrincipal implements Principal, Cloneable, Serializable
         this.username = username;
     }
 
-    @Basic
-    @Column(name = "HashedPassword")
-    public byte[] getPassword()
-    {
-        return this.password;
-    }
-
-    public void setPassword(byte[] password)
-    {
-        this.password = password;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return this.username.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object other)
-    {
-        return other instanceof UserPrincipal &&
-                ((UserPrincipal) other).username.equals(this.username);
-    }
-
-    @Override
-    @SuppressWarnings("CloneDoesntDeclareCloneNotSupportedException")
-    protected UserPrincipal clone()
-    {
-        try {
-            return (UserPrincipal) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e); // not possible
-        }
-    }
-
-    @Override
-    public String toString()
-    {
-        return this.username;
-    }
-
-    public static Principal getPrincipal(HttpSession session)
-    {
-        return session == null ? null
-                : (Principal) session.getAttribute(SESSION_ATTRIBUTE_KEY);
-    }
-
-    public static void setPrincipal(HttpSession session, Principal principal)
-    {
-        session.setAttribute(SESSION_ATTRIBUTE_KEY, principal);
-    }
-
-    @Basic
-    public String getTitle()
-    {
-        return title;
-    }
-
-    public void setTitle(String title)
-    {
-        this.title = title;
-    }
-
-    @Basic
-    public String getFirstName()
-    {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName)
-    {
-        this.firstName = firstName;
-    }
-
-    @Basic
-    public String getLastName()
-    {
-        return lastName;
-    }
-
-    public void setLastName(String lastName)
-    {
-        this.lastName = lastName;
-    }
-
-    @Basic
-    public String getNameSuffix()
-    {
-        return nameSuffix;
-    }
-
-    public void setNameSuffix(String nameSuffix)
-    {
-        this.nameSuffix = nameSuffix;
-    }
-
-    @Basic
-    public String getDisplayName()
-    {
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName)
-    {
-        this.displayName = displayName;
-    }
-
-    @Enumerated(EnumType.STRING)
-    public Gender getGender()
-    {
-        return gender;
-    }
-
-    public void setGender(Gender gender)
-    {
-        this.gender = gender;
-    }
-
-    @Convert(converter = InstantConverter.class)
-    public Instant getBirthday()
-    {
-        return birthday;
-    }
-
-    public void setBirthday(Instant birthday)
-    {
-        this.birthday = birthday;
-    }
-
     // bi-directional one-to-one association to Address
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "userPrincipal", fetch = FetchType.LAZY)
     public Address getAddress()
     {
-        return address;
+        return this.address;
     }
 
     public void setAddress(Address address)
@@ -233,13 +177,12 @@ public class UserPrincipal implements Principal, Cloneable, Serializable
         this.address = address;
     }
 
-    @XmlTransient
     @JsonIgnore
-    @OneToMany(mappedBy = "author", fetch = FetchType.EAGER,
-            cascade = CascadeType.ALL, orphanRemoval = true)
+    // bi-directional many-to-one association to Course
+    @OneToMany(mappedBy = "author")
     public List<Course> getCourseList()
     {
-        return courseList;
+        return this.courseList;
     }
 
     public void setCourseList(List<Course> courseList)
@@ -247,24 +190,245 @@ public class UserPrincipal implements Principal, Cloneable, Serializable
         this.courseList = courseList;
     }
 
-    // public List<UserPrincipal> getFolloweeList()
-    // {
-    // return followeeList;
-    // }
-    //
-    // public void setFolloweeList(List<UserPrincipal> followeeList)
-    // {
-    // this.followeeList = followeeList;
-    // }
-    //
-    // public List<UserPrincipal> getFollowerList()
-    // {
-    // return followerList;
-    // }
-    //
-    // public void setFollowerList(List<UserPrincipal> followerList)
-    // {
-    // this.followerList = followerList;
-    // }
+    public Course addCourse(Course course)
+    {
+        getCourseList().add(course);
+        course.setAuthor(this);
+
+        return course;
+    }
+
+    public Course removeCourse(Course course)
+    {
+        getCourseList().remove(course);
+        course.setAuthor(null);
+
+        return course;
+    }
+
+    @JsonIgnore
+    // bi-directional many-to-one association to Enroll
+    @OneToMany(mappedBy = "userPrincipal")
+    public List<Enroll> getEnrollList()
+    {
+        return this.enrollList;
+    }
+
+    public void setEnrollList(List<Enroll> enrollList)
+    {
+        this.enrollList = enrollList;
+    }
+
+    public Enroll addEnrollList(Enroll enrollList)
+    {
+        getEnrollList().add(enrollList);
+        enrollList.setUserPrincipal(this);
+
+        return enrollList;
+    }
+
+    public Enroll removeEnrollList(Enroll enrollList)
+    {
+        getEnrollList().remove(enrollList);
+        enrollList.setUserPrincipal(null);
+
+        return enrollList;
+    }
+
+    @JsonIgnore
+    // bi-directional many-to-one association to Meeting
+    @OneToMany(mappedBy = "learner")
+    public List<Meeting> getLearningMeetingList()
+    {
+        return this.learningMeetingList;
+    }
+
+    public void setLearningMeetingList(List<Meeting> learningMeetingList)
+    {
+        this.learningMeetingList = learningMeetingList;
+    }
+
+    public Meeting addLearningMeetingList(Meeting learningMeetingList)
+    {
+        getLearningMeetingList().add(learningMeetingList);
+        learningMeetingList.setLearner(this);
+
+        return learningMeetingList;
+    }
+
+    public Meeting removeLearningMeetingList(Meeting learningMeetingList)
+    {
+        getLearningMeetingList().remove(learningMeetingList);
+        learningMeetingList.setLearner(null);
+
+        return learningMeetingList;
+    }
+
+    @JsonIgnore
+    // bi-directional many-to-one association to Meeting
+    @OneToMany(mappedBy = "teacher")
+    public List<Meeting> getTeachingMeetingList()
+    {
+        return this.teachingMeetingList;
+    }
+
+    public void setTeachingMeetingList(List<Meeting> teachingMeetingList)
+    {
+        this.teachingMeetingList = teachingMeetingList;
+    }
+
+    public Meeting addTeachingMeetingList(Meeting teachingMeetingList)
+    {
+        getTeachingMeetingList().add(teachingMeetingList);
+        teachingMeetingList.setTeacher(this);
+
+        return teachingMeetingList;
+    }
+
+    public Meeting removeTeachingMeetingList(Meeting teachingMeetingList)
+    {
+        getTeachingMeetingList().remove(teachingMeetingList);
+        teachingMeetingList.setTeacher(null);
+
+        return teachingMeetingList;
+    }
+
+    @JsonIgnore
+    // bi-directional many-to-one association to Rank
+    @OneToMany(mappedBy = "user")
+    public List<Rank> getRankList()
+    {
+        return this.rankList;
+    }
+
+    public void setRankList(List<Rank> rankList)
+    {
+        this.rankList = rankList;
+    }
+
+    public Rank addRankList(Rank rankList)
+    {
+        getRankList().add(rankList);
+        rankList.setUser(this);
+
+        return rankList;
+    }
+
+    public Rank removeRankList(Rank rankList)
+    {
+        getRankList().remove(rankList);
+        rankList.setUser(null);
+
+        return rankList;
+    }
+
+    @JsonIgnore
+    // bi-directional many-to-one association to TimeFrame
+    @OneToMany(mappedBy = "userPrincipal")
+    public List<TimeFrame> getTimeFrameList()
+    {
+        return this.timeFrameList;
+    }
+
+    public void setTimeFrameList(List<TimeFrame> timeFrameList)
+    {
+        this.timeFrameList = timeFrameList;
+    }
+
+    public TimeFrame addTimeFrameList(TimeFrame timeFrameList)
+    {
+        getTimeFrameList().add(timeFrameList);
+        timeFrameList.setUserPrincipal(this);
+
+        return timeFrameList;
+    }
+
+    public TimeFrame removeTimeFrameList(TimeFrame timeFrameList)
+    {
+        getTimeFrameList().remove(timeFrameList);
+        timeFrameList.setUserPrincipal(null);
+
+        return timeFrameList;
+    }
+
+    @JsonIgnore
+    // bi-directional many-to-one association to Usedlanguage
+    @OneToMany(mappedBy = "userPrincipal")
+    public List<Usedlanguage> getUsedLanguageList()
+    {
+        return this.usedLanguageList;
+    }
+
+    public void setUsedLanguageList(List<Usedlanguage> usedLanguageList)
+    {
+        this.usedLanguageList = usedLanguageList;
+    }
+
+    public Usedlanguage addUsedLanguageList(Usedlanguage usedLanguageList)
+    {
+        getUsedLanguageList().add(usedLanguageList);
+        usedLanguageList.setUserPrincipal(this);
+
+        return usedLanguageList;
+    }
+
+    public Usedlanguage removeUsedLanguageList(Usedlanguage usedLanguageList)
+    {
+        getUsedLanguageList().remove(usedLanguageList);
+        usedLanguageList.setUserPrincipal(null);
+
+        return usedLanguageList;
+    }
+
+    @JsonIgnore
+    // bi-directional many-to-many association to Role
+    @ManyToMany
+    @JoinTable(
+            name = "userinrole", joinColumns = {
+                    @JoinColumn(name = "UserId")
+            }, inverseJoinColumns = {
+                    @JoinColumn(name = "RoleId")
+            })
+    public List<Role> getRoleList()
+    {
+        return this.roleList;
+    }
+
+    public void setRoleList(List<Role> roleList)
+    {
+        this.roleList = roleList;
+    }
+
+    @JsonIgnore
+    // bi-directional many-to-many association to UserPrincipal
+    @ManyToMany
+    @JoinTable(
+            name = "following", joinColumns = {
+                    @JoinColumn(name = "FollowerId")
+            }, inverseJoinColumns = {
+                    @JoinColumn(name = "FolloweeId")
+            })
+    public List<UserPrincipal> getFollowerList()
+    {
+        return this.followerList;
+    }
+
+    public void setFollowerList(List<UserPrincipal> followerList)
+    {
+        this.followerList = followerList;
+    }
+
+    @JsonIgnore
+    // bi-directional many-to-many association to UserPrincipal
+    @ManyToMany(mappedBy = "followerList")
+    public List<UserPrincipal> getFolloweeList()
+    {
+        return this.followeeList;
+    }
+
+    public void setFolloweeList(List<UserPrincipal> followeeList)
+    {
+        this.followeeList = followeeList;
+    }
 
 }

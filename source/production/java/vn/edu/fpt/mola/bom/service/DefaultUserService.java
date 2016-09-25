@@ -44,7 +44,6 @@ public class DefaultUserService implements UserService
         for (UserPrincipal userPrincipal : iterable) {
             list.add(userPrincipal);
         }
-        list.sort((u1, u2) -> u1.getName().compareTo(u2.getName()));
         return list;
     }
 

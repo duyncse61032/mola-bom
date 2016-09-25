@@ -45,6 +45,6 @@ public class CourseEndpoint
     public void save(@PathVariable("userId") long userId,
             @RequestBody @Valid Course course)
     {
-        this.courseService.saveCourse(userId, course);;
+        this.courseService.saveCourse(userId, course);
     }
 }

@@ -19,9 +19,9 @@ public class UserForm extends BaseEntityView<UserPrincipal>
     @NotNull
     private String password;
     private String title;
-    @NotNull(message = "{validate.user.name}")
+    @NotNull(message = "{validate.user.firstName}")
     private String firstName;
-    @NotNull(message = "{validate.user.name}")
+    @NotNull(message = "{validate.user.lastName}")
     private String lastName;
     private String nameSuffix;
     private String displayName;

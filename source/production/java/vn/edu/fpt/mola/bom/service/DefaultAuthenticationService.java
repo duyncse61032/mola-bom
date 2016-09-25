@@ -47,7 +47,7 @@ public class DefaultAuthenticationService implements AuthenticationService
 
         if(!BCrypt.checkpw(
                 password,
-                new String(principal.getPassword(), StandardCharsets.UTF_8)
+                new String(principal.getHashedPassword(), StandardCharsets.UTF_8)
         ))
         {
             log.warn("Authentication failed for user {}.", username);
@@ -66,7 +66,7 @@ public class DefaultAuthenticationService implements AuthenticationService
         if(newPassword != null && newPassword.length() > 0)
         {
             String salt = BCrypt.gensalt(HASHING_ROUNDS, RANDOM);
-            principal.setPassword(BCrypt.hashpw(newPassword, salt).getBytes());
+            principal.setHashedPassword(BCrypt.hashpw(newPassword, salt).getBytes());
         }
 
         this.userRepository.save(principal);

@@ -1,54 +1,53 @@
 package vn.edu.fpt.mola.bom.entity;
 
-import javax.persistence.Basic;
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
-import javax.xml.bind.annotation.XmlTransient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
+/**
+ * The persistent class for the address database table.
+ * 
+ */
 @Entity
-public class Address
+@NamedQuery(name = "Address.findAll", query = "SELECT a FROM Address a")
+public class Address implements Serializable
 {
-    private long userId;
-    private String name;
+    private static final long serialVersionUID = 1L;
+    private String userId;
     private String buildingNumber;
+    private String country;
+    private String name;
+    private String state;
     private String street;
     private String town;
-    private String state;
-    private String country;
-    private UserPrincipal user;
+    private UserPrincipal userPrincipal;
 
-    @Id
-    public long getUserId()
+    public Address()
     {
-        return userId;
     }
 
-    public void setUserId(long userId)
+    @Id
+    public String getUserId()
+    {
+        return this.userId;
+    }
+
+    public void setUserId(String userId)
     {
         this.userId = userId;
     }
 
-    @Basic
-    public String getName()
-    {
-        return name;
-    }
-
-    public void setName(String name)
-    {
-        this.name = name;
-    }
-
-    @Basic
     public String getBuildingNumber()
     {
-        return buildingNumber;
+        return this.buildingNumber;
     }
 
     public void setBuildingNumber(String buildingNumber)
@@ -56,43 +55,9 @@ public class Address
         this.buildingNumber = buildingNumber;
     }
 
-    @Basic
-    public String getStreet()
-    {
-        return street;
-    }
-
-    public void setStreet(String street)
-    {
-        this.street = street;
-    }
-
-    @Basic
-    public String getTown()
-    {
-        return town;
-    }
-
-    public void setTown(String town)
-    {
-        this.town = town;
-    }
-
-    @Basic
-    public String getState()
-    {
-        return state;
-    }
-
-    public void setState(String state)
-    {
-        this.state = state;
-    }
-
-    @Basic
     public String getCountry()
     {
-        return country;
+        return this.country;
     }
 
     public void setCountry(String country)
@@ -100,19 +65,58 @@ public class Address
         this.country = country;
     }
 
-    @XmlTransient
-    @JsonIgnore
-    //bi-directional one-to-one association to UserPrincipal
-    @OneToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="UserId")
-    public UserPrincipal getUser()
+    public String getName()
     {
-        return user;
+        return this.name;
     }
 
-    public void setUser(UserPrincipal user)
+    public void setName(String name)
     {
-        this.user = user;
+        this.name = name;
+    }
+
+    public String getState()
+    {
+        return this.state;
+    }
+
+    public void setState(String state)
+    {
+        this.state = state;
+    }
+
+    public String getStreet()
+    {
+        return this.street;
+    }
+
+    public void setStreet(String street)
+    {
+        this.street = street;
+    }
+
+    public String getTown()
+    {
+        return this.town;
+    }
+
+    public void setTown(String town)
+    {
+        this.town = town;
+    }
+
+    @JsonIgnore
+    // bi-directional one-to-one association to UserPrincipal
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "UserId")
+    public UserPrincipal getUserPrincipal()
+    {
+        return this.userPrincipal;
+    }
+
+    public void setUserPrincipal(UserPrincipal userPrincipal)
+    {
+        this.userPrincipal = userPrincipal;
     }
 
 }
