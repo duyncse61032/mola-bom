@@ -1,6 +1,0 @@
-WildFly 10 administrator added.  Please make note of these credentials:
-
-   Username: admind3G4pZV
-   Password: LksckQPPQedh
-   
-   run 'rhc port-forward jbosswildfly' to access the web admin area on port 9990.

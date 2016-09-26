@@ -7,15 +7,13 @@
 		<class>vn.edu.fpt.mola.bom.entity.Course</class>
 		<class>vn.edu.fpt.mola.bom.entity.Enroll</class>
 		<class>vn.edu.fpt.mola.bom.entity.EnrollPK</class>
-		<class>vn.edu.fpt.mola.bom.entity.Language</class>
 		<class>vn.edu.fpt.mola.bom.entity.Lesson</class>
 		<class>vn.edu.fpt.mola.bom.entity.Meeting</class>
 		<class>vn.edu.fpt.mola.bom.entity.Rank</class>
-		<class>vn.edu.fpt.mola.bom.entity.Role</class>
 		<class>vn.edu.fpt.mola.bom.entity.Slot</class>
 		<class>vn.edu.fpt.mola.bom.entity.TimeFrame</class>
-		<class>vn.edu.fpt.mola.bom.entity.Usedlanguage</class>
-		<class>vn.edu.fpt.mola.bom.entity.UsedlanguagePK</class>
+		<class>vn.edu.fpt.mola.bom.entity.Language</class>
+		<class>vn.edu.fpt.mola.bom.entity.Role</class>
 		<class>vn.edu.fpt.mola.bom.entity.UserPrincipal</class>
 	</persistence-unit>
 </persistence>

@@ -7,8 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -25,8 +25,8 @@ public class Language implements Serializable
     private long id;
     private String englishName;
     private String nativeName;
-    private List<Course> courseList;
-    private List<Usedlanguage> usedLanguageList;
+    private List<UserPrincipal> learnerList;
+    private List<UserPrincipal> teacherList;
 
     public Language()
     {
@@ -65,61 +65,29 @@ public class Language implements Serializable
     }
 
     @JsonIgnore
-    // bi-directional many-to-one association to Course
-    @OneToMany(mappedBy = "language")
-    public List<Course> getCourseList()
+    // bi-directional many-to-many association to UserPrincipal
+    @ManyToMany(mappedBy = "learningLanguageList")
+    public List<UserPrincipal> getLearnerList()
     {
-        return this.courseList;
+        return this.learnerList;
     }
 
-    public void setCourseList(List<Course> courseList)
+    public void setLearnerList(List<UserPrincipal> learnerList)
     {
-        this.courseList = courseList;
-    }
-
-    public Course addCourse(Course course)
-    {
-        getCourseList().add(course);
-        course.setLanguage(this);
-
-        return course;
-    }
-
-    public Course removeCourse(Course course)
-    {
-        getCourseList().remove(course);
-        course.setLanguage(null);
-
-        return course;
+        this.learnerList = learnerList;
     }
 
     @JsonIgnore
-    // bi-directional many-to-one association to Usedlanguage
-    @OneToMany(mappedBy = "language")
-    public List<Usedlanguage> getUsedLanguageList()
+    // bi-directional many-to-many association to UserPrincipal
+    @ManyToMany(mappedBy = "teachingLanguageList")
+    public List<UserPrincipal> getTeacherList()
     {
-        return this.usedLanguageList;
+        return this.teacherList;
     }
 
-    public void setUsedLanguageList(List<Usedlanguage> usedLanguageList)
+    public void setTeacherList(List<UserPrincipal> teacherList)
     {
-        this.usedLanguageList = usedLanguageList;
-    }
-
-    public Usedlanguage addUsedLanguage(Usedlanguage usedLanguage)
-    {
-        getUsedLanguageList().add(usedLanguage);
-        usedLanguage.setLanguage(this);
-
-        return usedLanguage;
-    }
-
-    public Usedlanguage removeUsedLanguage(Usedlanguage usedLanguage)
-    {
-        getUsedLanguageList().remove(usedLanguage);
-        usedLanguage.setLanguage(null);
-
-        return usedLanguage;
+        this.teacherList = teacherList;
     }
 
 }

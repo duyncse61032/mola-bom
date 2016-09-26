@@ -5,7 +5,6 @@ CREATE DATABASE mola DEFAULT CHARACTER SET 'utf8'
 
 USE mola;
 
-#DROP TABLE UserPrincipal;
 CREATE TABLE UserPrincipal (
   Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   Username VARCHAR(30) NOT NULL,
@@ -22,7 +21,6 @@ CREATE TABLE UserPrincipal (
   UNIQUE KEY UserPrincipal_Username (Username)
 ) ENGINE = InnoDB;
 
-#DROP TABLE Following;
 CREATE TABLE Following (
   FollowerId BIGINT UNSIGNED NOT NULL,
   FolloweeId BIGINT UNSIGNED NOT NULL,
@@ -43,15 +41,25 @@ CREATE TABLE Language (
   UNIQUE KEY Language_NativeName (NativeName)
 ) ENGINE = InnoDB;
 
-CREATE TABLE UsedLanguage (
+CREATE TABLE LearningLanguage (
   UserId BIGINT UNSIGNED NOT NULL,
   LanguageId BIGINT UNSIGNED NOT NULL,
-  UseFor ENUM('LEARNING', 'TEACHING') NOT NULL,
   
   PRIMARY KEY (UserId, LanguageId),
-  CONSTRAINT UsedLanguage_fk_UserId FOREIGN KEY (UserId)
+  CONSTRAINT LearningLanguagee_fk_UserId FOREIGN KEY (UserId)
     REFERENCES UserPrincipal(Id) ON DELETE CASCADE,
-  CONSTRAINT UsedLanguage_fk_LanguageId FOREIGN KEY (LanguageId)
+  CONSTRAINT LearningLanguage_fk_LanguageId FOREIGN KEY (LanguageId)
+    REFERENCES Language(Id) ON DELETE CASCADE
+) ENGINE = InnoDB;
+
+CREATE TABLE TeachingLanguage (
+  UserId BIGINT UNSIGNED NOT NULL,
+  LanguageId BIGINT UNSIGNED NOT NULL,
+  
+  PRIMARY KEY (UserId, LanguageId),
+  CONSTRAINT TeachingLanguage_fk_UserId FOREIGN KEY (UserId)
+    REFERENCES UserPrincipal(Id) ON DELETE CASCADE,
+  CONSTRAINT TeachingLanguage_fk_LanguageId FOREIGN KEY (LanguageId)
     REFERENCES Language(Id) ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
@@ -73,7 +81,6 @@ CREATE TABLE UserInRole (
     REFERENCES Role(Id) ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
-#DROP TABLE Address;
 CREATE TABLE Address (
   UserId BIGINT UNSIGNED NOT NULL PRIMARY KEY,
   Name VARCHAR(35) NULL,
@@ -87,7 +94,6 @@ CREATE TABLE Address (
     REFERENCES UserPrincipal (Id) ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
-#DROP TABLE Course;
 CREATE TABLE Course (
   Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   AuthorId BIGINT UNSIGNED NOT NULL,

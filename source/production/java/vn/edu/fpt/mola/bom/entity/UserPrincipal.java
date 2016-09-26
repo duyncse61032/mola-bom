@@ -1,13 +1,10 @@
 package vn.edu.fpt.mola.bom.entity;
 
 import java.io.Serializable;
-import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Convert;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,11 +15,10 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import vn.edu.fpt.mola.bom.entity.converter.InstantConverter;
-import vn.edu.fpt.mola.bom.entity.enumerate.Gender;
 
 
 /**
@@ -38,13 +34,13 @@ public class UserPrincipal implements Serializable
     private long id;
     private String username;
     private byte[] hashedPassword;
-    private Instant birthday;
-    private String displayName;
+    private String title;
     private String firstName;
     private String lastName;
-    private Gender gender;
     private String nameSuffix;
-    private String title;
+    private String displayName;
+    private Date birthday;
+    private String gender;
     private Address address;
     private List<Course> courseList;
     private List<Enroll> enrollList;
@@ -52,7 +48,8 @@ public class UserPrincipal implements Serializable
     private List<Meeting> teachingMeetingList;
     private List<Rank> rankList;
     private List<TimeFrame> timeFrameList;
-    private List<Usedlanguage> usedLanguageList;
+    private List<Language> learningLanguageList;
+    private List<Language> teachingLanguageList;
     private List<Role> roleList;
     private List<UserPrincipal> followerList;
     private List<UserPrincipal> followeeList;
@@ -73,13 +70,13 @@ public class UserPrincipal implements Serializable
         this.id = id;
     }
 
-    @Convert(converter = InstantConverter.class)
-    public Instant getBirthday()
+    @Temporal(TemporalType.DATE)
+    public Date getBirthday()
     {
         return this.birthday;
     }
 
-    public void setBirthday(Instant birthday)
+    public void setBirthday(Date birthday)
     {
         this.birthday = birthday;
     }
@@ -104,13 +101,12 @@ public class UserPrincipal implements Serializable
         this.firstName = firstName;
     }
 
-    @Enumerated(EnumType.STRING)
-    public Gender getGender()
+    public String getGender()
     {
         return this.gender;
     }
 
-    public void setGender(Gender gender)
+    public void setGender(String gender)
     {
         this.gender = gender;
     }
@@ -219,20 +215,20 @@ public class UserPrincipal implements Serializable
         this.enrollList = enrollList;
     }
 
-    public Enroll addEnrollList(Enroll enrollList)
+    public Enroll addEnroll(Enroll enroll)
     {
-        getEnrollList().add(enrollList);
-        enrollList.setUserPrincipal(this);
+        getEnrollList().add(enroll);
+        enroll.setUserPrincipal(this);
 
-        return enrollList;
+        return enroll;
     }
 
-    public Enroll removeEnrollList(Enroll enrollList)
+    public Enroll removeEnroll(Enroll enroll)
     {
-        getEnrollList().remove(enrollList);
-        enrollList.setUserPrincipal(null);
+        getEnrollList().remove(enroll);
+        enroll.setUserPrincipal(null);
 
-        return enrollList;
+        return enroll;
     }
 
     @JsonIgnore
@@ -248,20 +244,20 @@ public class UserPrincipal implements Serializable
         this.learningMeetingList = learningMeetingList;
     }
 
-    public Meeting addLearningMeetingList(Meeting learningMeetingList)
+    public Meeting addLearningMeeting(Meeting learningMeeting)
     {
-        getLearningMeetingList().add(learningMeetingList);
-        learningMeetingList.setLearner(this);
+        getLearningMeetingList().add(learningMeeting);
+        learningMeeting.setLearner(this);
 
-        return learningMeetingList;
+        return learningMeeting;
     }
 
-    public Meeting removeLearningMeetingList(Meeting learningMeetingList)
+    public Meeting removeLearningMeeting(Meeting learningMeeting)
     {
-        getLearningMeetingList().remove(learningMeetingList);
-        learningMeetingList.setLearner(null);
+        getLearningMeetingList().remove(learningMeeting);
+        learningMeeting.setLearner(null);
 
-        return learningMeetingList;
+        return learningMeeting;
     }
 
     @JsonIgnore
@@ -277,20 +273,20 @@ public class UserPrincipal implements Serializable
         this.teachingMeetingList = teachingMeetingList;
     }
 
-    public Meeting addTeachingMeetingList(Meeting teachingMeetingList)
+    public Meeting addTeachingMeeting(Meeting teachingMeeting)
     {
-        getTeachingMeetingList().add(teachingMeetingList);
-        teachingMeetingList.setTeacher(this);
+        getTeachingMeetingList().add(teachingMeeting);
+        teachingMeeting.setTeacher(this);
 
-        return teachingMeetingList;
+        return teachingMeeting;
     }
 
-    public Meeting removeTeachingMeetingList(Meeting teachingMeetingList)
+    public Meeting removeTeachingMeeting(Meeting teachingMeeting)
     {
-        getTeachingMeetingList().remove(teachingMeetingList);
-        teachingMeetingList.setTeacher(null);
+        getTeachingMeetingList().remove(teachingMeeting);
+        teachingMeeting.setTeacher(null);
 
-        return teachingMeetingList;
+        return teachingMeeting;
     }
 
     @JsonIgnore
@@ -306,20 +302,20 @@ public class UserPrincipal implements Serializable
         this.rankList = rankList;
     }
 
-    public Rank addRankList(Rank rankList)
+    public Rank addRank(Rank rank)
     {
-        getRankList().add(rankList);
-        rankList.setUser(this);
+        getRankList().add(rank);
+        rank.setUser(this);
 
-        return rankList;
+        return rank;
     }
 
-    public Rank removeRankList(Rank rankList)
+    public Rank removeRank(Rank rank)
     {
-        getRankList().remove(rankList);
-        rankList.setUser(null);
+        getRankList().remove(rank);
+        rank.setUser(null);
 
-        return rankList;
+        return rank;
     }
 
     @JsonIgnore
@@ -335,54 +331,60 @@ public class UserPrincipal implements Serializable
         this.timeFrameList = timeFrameList;
     }
 
-    public TimeFrame addTimeFrameList(TimeFrame timeFrameList)
+    public TimeFrame addTimeFrame(TimeFrame timeFrame)
     {
-        getTimeFrameList().add(timeFrameList);
-        timeFrameList.setUserPrincipal(this);
+        getTimeFrameList().add(timeFrame);
+        timeFrame.setUserPrincipal(this);
 
-        return timeFrameList;
+        return timeFrame;
     }
 
-    public TimeFrame removeTimeFrameList(TimeFrame timeFrameList)
+    public TimeFrame removeTimeFrame(TimeFrame timeFrame)
     {
-        getTimeFrameList().remove(timeFrameList);
-        timeFrameList.setUserPrincipal(null);
+        getTimeFrameList().remove(timeFrame);
+        timeFrame.setUserPrincipal(null);
 
-        return timeFrameList;
+        return timeFrame;
     }
 
-    @JsonIgnore
-    // bi-directional many-to-one association to Usedlanguage
-    @OneToMany(mappedBy = "userPrincipal")
-    public List<Usedlanguage> getUsedLanguageList()
+    // bi-directional many-to-many association to Language
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "learninglanguage", joinColumns = {
+                    @JoinColumn(name = "UserId")
+            }, inverseJoinColumns = {
+                    @JoinColumn(name = "LanguageId")
+            })
+    public List<Language> getLearningLanguageList()
     {
-        return this.usedLanguageList;
+        return this.learningLanguageList;
     }
 
-    public void setUsedLanguageList(List<Usedlanguage> usedLanguageList)
+    public void setLearningLanguageList(List<Language> learningLanguageList)
     {
-        this.usedLanguageList = usedLanguageList;
+        this.learningLanguageList = learningLanguageList;
     }
 
-    public Usedlanguage addUsedLanguageList(Usedlanguage usedLanguageList)
+    // bi-directional many-to-many association to Language
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "teachinglanguage", joinColumns = {
+                    @JoinColumn(name = "UserId")
+            }, inverseJoinColumns = {
+                    @JoinColumn(name = "LanguageId")
+            })
+    public List<Language> getTeachingLanguageList()
     {
-        getUsedLanguageList().add(usedLanguageList);
-        usedLanguageList.setUserPrincipal(this);
-
-        return usedLanguageList;
+        return this.teachingLanguageList;
     }
 
-    public Usedlanguage removeUsedLanguageList(Usedlanguage usedLanguageList)
+    public void setTeachingLanguageList(List<Language> teachingLanguageList)
     {
-        getUsedLanguageList().remove(usedLanguageList);
-        usedLanguageList.setUserPrincipal(null);
-
-        return usedLanguageList;
+        this.teachingLanguageList = teachingLanguageList;
     }
 
-    @JsonIgnore
     // bi-directional many-to-many association to Role
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "userinrole", joinColumns = {
                     @JoinColumn(name = "UserId")

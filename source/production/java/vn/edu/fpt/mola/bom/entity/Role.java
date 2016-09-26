@@ -24,7 +24,7 @@ public class Role implements Serializable
     private static final long serialVersionUID = 1L;
     private long id;
     private String title;
-    private List<UserPrincipal> userPrincipalList;
+    private List<UserPrincipal> userList;
 
     public Role()
     {
@@ -55,14 +55,14 @@ public class Role implements Serializable
     @JsonIgnore
     // bi-directional many-to-many association to UserPrincipal
     @ManyToMany(mappedBy = "roleList")
-    public List<UserPrincipal> getUserPrincipalList()
+    public List<UserPrincipal> getUserList()
     {
-        return this.userPrincipalList;
+        return this.userList;
     }
 
-    public void setUserPrincipalList(List<UserPrincipal> userPrincipalList)
+    public void setUserList(List<UserPrincipal> userList)
     {
-        this.userPrincipalList = userPrincipalList;
+        this.userList = userList;
     }
 
 }

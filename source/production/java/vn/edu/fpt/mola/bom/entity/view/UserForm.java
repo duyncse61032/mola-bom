@@ -1,12 +1,15 @@
 package vn.edu.fpt.mola.bom.entity.view;
 
 import java.time.Instant;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.springframework.util.StringUtils;
 
+import vn.edu.fpt.mola.bom.entity.Language;
+import vn.edu.fpt.mola.bom.entity.Role;
 import vn.edu.fpt.mola.bom.entity.UserPrincipal;
 import vn.edu.fpt.mola.bom.entity.enumerate.Gender;
 
@@ -27,6 +30,9 @@ public class UserForm extends BaseEntityView<UserPrincipal>
     private String displayName;
     private Gender gender;
     private Instant birthday;
+    private List<Language> learningLanguageList;
+    private List<Language> teachingLanguageList;
+    private List<Role> roleList;
 
     @Override
     public void updateEntity(UserPrincipal entity)
@@ -146,4 +152,33 @@ public class UserForm extends BaseEntityView<UserPrincipal>
         this.birthday = birthday;
     }
 
+    public List<Language> getLearningLanguageList()
+    {
+        return learningLanguageList;
+    }
+
+    public void setLearningLanguageList(List<Language> learningLanguageList)
+    {
+        this.learningLanguageList = learningLanguageList;
+    }
+
+    public List<Language> getTeachingLanguageList()
+    {
+        return teachingLanguageList;
+    }
+
+    public void setTeachingLanguageList(List<Language> teachingLanguageList)
+    {
+        this.teachingLanguageList = teachingLanguageList;
+    }
+
+    public List<Role> getRoleList()
+    {
+        return roleList;
+    }
+
+    public void setRoleList(List<Role> roleList)
+    {
+        this.roleList = roleList;
+    }
 }
