@@ -13,13 +13,13 @@ public class InstantConverter implements AttributeConverter<Instant, Timestamp>
     @Override
     public Timestamp convertToDatabaseColumn(Instant instant)
     {
-        return instant == null ? null : new Timestamp(instant.toEpochMilli());
+        return instant == null ? null : Timestamp.from(instant);
     }
 
     @Override
     public Instant convertToEntityAttribute(Timestamp timestamp)
     {
-        return timestamp == null ? null : Instant.ofEpochMilli(timestamp.getTime());
+        return timestamp == null ? null : timestamp.toInstant();
     }
 
 }

@@ -1,9 +1,11 @@
 package vn.edu.fpt.mola.bom.entity;
 
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
+import javax.persistence.Basic;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,6 +20,8 @@ import javax.persistence.OneToMany;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import vn.edu.fpt.mola.bom.entity.converter.InstantConverter;
+import vn.edu.fpt.mola.bom.entity.converter.LocalDateConverter;
+import vn.edu.fpt.mola.bom.entity.converter.LocalTimeConverter;
 
 
 /**
@@ -30,10 +34,13 @@ public class TimeFrame implements Serializable
 {
     private static final long serialVersionUID = 1L;
     private long id;
-    private Instant endDate;
-    private Instant startDate;
+    private LocalDate endDate;
+    private LocalDate startDate;
+    private LocalTime fromTime;
+    private LocalTime toTime;
+    private Boolean dailyAgenda;
+    private Integer weeklyAgenda;
     private List<Slot> slotList;
-    private Agenda agenda;
     private UserPrincipal userPrincipal;
 
     public TimeFrame()
@@ -52,26 +59,70 @@ public class TimeFrame implements Serializable
         this.id = id;
     }
 
-    @Convert(converter = InstantConverter.class)
-    public Instant getEndDate()
+    @Convert(converter = LocalDateConverter.class)
+    public LocalDate getEndDate()
     {
         return this.endDate;
     }
 
-    public void setEndDate(Instant endDate)
+    public void setEndDate(LocalDate endDate)
     {
         this.endDate = endDate;
     }
 
-    @Convert(converter = InstantConverter.class)
-    public Instant getStartDate()
+    @Convert(converter = LocalDateConverter.class)
+    public LocalDate getStartDate()
     {
         return this.startDate;
     }
 
-    public void setStartDate(Instant startDate)
+    public void setStartDate(LocalDate startDate)
     {
         this.startDate = startDate;
+    }
+
+    @Convert(converter = LocalTimeConverter.class)
+    public LocalTime getFromTime()
+    {
+        return fromTime;
+    }
+
+    public void setFromTime(LocalTime fromTime)
+    {
+        this.fromTime = fromTime;
+    }
+
+    @Convert(converter = LocalTimeConverter.class)
+    public LocalTime getToTime()
+    {
+        return toTime;
+    }
+
+    public void setToTime(LocalTime toTime)
+    {
+        this.toTime = toTime;
+    }
+
+    @Basic
+    public Boolean getDailyAgenda()
+    {
+        return dailyAgenda;
+    }
+
+    public void setDailyAgenda(Boolean dailyAgenda)
+    {
+        this.dailyAgenda = dailyAgenda;
+    }
+
+    @Basic
+    public Integer getWeeklyAgenda()
+    {
+        return weeklyAgenda;
+    }
+
+    public void setWeeklyAgenda(Integer weeklyAgenda)
+    {
+        this.weeklyAgenda = weeklyAgenda;
     }
 
     @JsonIgnore
@@ -101,19 +152,6 @@ public class TimeFrame implements Serializable
         slot.setTimeFrame(null);
 
         return slot;
-    }
-
-    // bi-directional many-to-one association to Agenda
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "AgendaId")
-    public Agenda getAgenda()
-    {
-        return this.agenda;
-    }
-
-    public void setAgenda(Agenda agenda)
-    {
-        this.agenda = agenda;
     }
 
     @JsonIgnore
