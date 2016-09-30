@@ -27,7 +27,6 @@ import vn.edu.fpt.mola.bom.validator.NotBlank;
 public class AuthenticationEndpoint
 {
     private static final Logger log = LogManager.getLogger();
-    public static final String USER_SESSION = "vn.edu.fpt.mola.bom.entity.UserPrincipal";
 
     @Inject
     AuthenticationService authenticationService;
@@ -58,7 +57,7 @@ public class AuthenticationEndpoint
     @ResponseBody
     public ResponseEntity<UserPrincipal> login(HttpSession session)
     {
-        UserPrincipal user = (UserPrincipal) this.getPrincipal(session);
+        UserPrincipal user = (UserPrincipal) AuthenticationService.getPrincipal(session);
         if (user != null) {
             return new ResponseEntity<>(user, HttpStatus.OK);
         }
@@ -74,7 +73,7 @@ public class AuthenticationEndpoint
             @RequestBody @Valid LoginForm form,
             Errors errors)
     {
-        UserPrincipal user = (UserPrincipal) this.getPrincipal(session);
+        UserPrincipal user = (UserPrincipal) AuthenticationService.getPrincipal(session);
         if (user != null) {
             return new ResponseEntity<>(user, HttpStatus.OK);
         }
@@ -90,7 +89,7 @@ public class AuthenticationEndpoint
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
 
-        this.setPrincipal(session, user);
+        AuthenticationService.setPrincipal(session, user);
         request.changeSessionId();
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
@@ -121,15 +120,5 @@ public class AuthenticationEndpoint
         {
             this.password = password;
         }
-    }
-
-    private Object getPrincipal(HttpSession session)
-    {
-        return (session == null) ? null : session.getAttribute(USER_SESSION);
-    }
-
-    private void setPrincipal(HttpSession session, UserPrincipal user)
-    {
-        session.setAttribute(USER_SESSION, user);
     }
 }

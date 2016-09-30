@@ -1,6 +1,7 @@
 package vn.edu.fpt.mola.bom.entity;
 
 import java.io.Serializable;
+import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -28,7 +30,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @NamedQuery(name = "UserPrincipal.findAll",
         query = "SELECT u FROM UserPrincipal u")
-public class UserPrincipal implements Serializable
+public class UserPrincipal implements Serializable, Principal 
 {
     private static final long serialVersionUID = 1L;
     private long id;
@@ -431,6 +433,14 @@ public class UserPrincipal implements Serializable
     public void setFolloweeList(List<UserPrincipal> followeeList)
     {
         this.followeeList = followeeList;
+    }
+
+    @Override
+    @JsonIgnore
+    @Transient
+    public String getName()
+    {
+        return this.username;
     }
 
 }
